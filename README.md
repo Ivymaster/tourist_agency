@@ -1,4 +1,4 @@
-# turisticka_agencija
+# tourist_agency
 
 Web aplikacija koja omogućuje rad fiktivne online turističke agencije "E-Turist". Kreirana putem Express razvojnog okvira i NodeJS serverske platforme. Korišteni 
 API-i su: SendGrid API(posrednik pri slanju emaila), ZingChart API (za kreiranje grafova), Stripe API (pristup plaćanju - testni način), Google Map API i MapBox API (za 
@@ -18,4 +18,4 @@ koje selektira administrator. Admin ima uvid u statistiku poslovanja, koja je pr
 Većina prikaza ima mogućnost određene pretrage, da li putem datuma, cijene, ili naziva. Većina akcija je popraćena prigodnim notifikacijama. Korištenjem treće partijskih modula omogućena je sanitizacija podataka.
 
 
-Datum: 21-11-2020.g.
+Datum: 21/11/2020.g.
