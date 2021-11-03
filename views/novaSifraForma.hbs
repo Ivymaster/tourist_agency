@@ -1,0 +1,86 @@
+<html>
+
+<head>
+    <title>Nova sifra</title>
+    {{>links}}
+</head>
+
+<body>
+
+
+    <div id="login-message"></div>
+
+
+    <div class="container">
+        <br>
+        <!--Naslov-->
+        <div class="row">
+            <div class="col-md-4">
+
+                <br>
+                <h1>Nova šifra</h1>
+            </div>
+
+        </div>
+        <br><br><br>
+        <div class="loginbox prijavna-forma">
+
+            <form method="POST" action="" id="newForgotPass" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <label class="form-label" name="password">Šifra:</label>
+                        <input class="form-control" type="password" placeholder="Unesi novu sifru..." value=""
+                            name="password" id="password" required="required" /> <br>
+                    </div>
+                    <div class="col-md-6  col-md-offset-3">
+
+                        <label class="form-label" name="passwordConfirm">Sifra provjera:</label>
+                        <input class="form-control" type="password" placeholder="Unesi potvrdu šifre..." value=""
+                            name="passwordConfirm" id="passwordConfirm" required="required" minlength="8" /> <br>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <button type="submit" value="{{token}}" class=" btn btn-primary"
+                            id="newForgotBtn">POSALJI</button><br />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="/js/zaboravljenaSifra.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+<!--
+<div class="mainanan">
+        <div id="login-message"></div>
+        <div class="loginbox" style="height: 360px;">
+            <div class="login-naslov"> Nova sifra </div>
+
+            <form method="POST" action="" id="newForgotPass">
+
+                <label class="form-label" name="password">Sifra:</label>
+                <input class="form-input" type="password" placeholder="Unesi sifru" value="" name="password"
+                    id="password" required="required" /> <br>
+                <label class="form-label" name="password">Ponovljena sifra:</label>
+                <input class="form-input" type="password" placeholder="Unesi sifru ponovo" value=""
+                    name="passwordConfirm" id="passwordConfirm" required="required" /> <br>
+
+                <button type="submit" value="{{token}}" class="form-log-btn" id="newForgotBtn">Spremi</button><br />
+            </form>
+        </div>
+    </div>
+
+
+
+ -->

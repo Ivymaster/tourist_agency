@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title> Upps !</title>
+    {{>links}}
+</head>
+
+
+<body>
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(10).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+
+    {{>header}}
+    <div id="login-message"></div>
+
+    <div class="container" style="min-height: 87%;">
+        <div class="row">
+            <div class="col-md-6 naslov text-left">
+                <h1>ERROR!</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 naslov text-center">
+                <h3>{{msg}}</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 naslov text-center">
+                <img src="/img/sadSmiley.jpg">
+            </div>
+        </div>
+    </div>
+
+    {{>footer}}
+
+</body>
+
+</html>

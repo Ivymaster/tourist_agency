@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <title>Login</title>
+    {{>links}}
+
+</head>
+
+<body>
+    <div id="login-message"></div>
+
+
+    <div class="container">
+        <br>
+        <!--Naslov-->
+        <div class="row">
+            <div class="col-md-4">
+
+                <br>
+                <h1>Prijava</h1>
+            </div>
+
+        </div>
+        <br><br><br>
+        <div class="loginbox prijavna-forma">
+
+            <form method="POST" action="" id="loginForm" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <label class="form-label" name="username">Korisničko ime:</label>
+                        <input class="form-control" type="text" placeholder="Unesi korisnicko ime" value=""
+                            name="username" id="username" required="required" /> <br>
+                    </div>
+                    <div class="col-md-6  col-md-offset-3">
+
+                        <label class="form-label" name="password">Sifra:</label>
+                        <input class="form-control" type="password" placeholder="Unesi sifru" value="" name="password"
+                            id="password" required="required" minlength="8" /> <br>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <button type="submit" class="form-log-btn btn btn-primary">Prijava</button><br />
+                        <a href="/registracija">Nemate račun? Registrirajte se!</a><br>
+                        <a href="/podatci/korisnici/zaboravljenaSifra">Zaboravili ste šifru?</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script type="module" src="/js/login.js"></script>
+</body>
+
+</html>

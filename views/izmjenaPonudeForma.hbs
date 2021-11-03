@@ -1,0 +1,203 @@
+<html>
+
+<head>
+    <title>Kreiranje Ponude</title>
+    {{>links}}
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multidatespicker/1.6.6/jquery-ui.multidatespicker.js"
+        integrity="sha512-shDVoXhqpazAEKzSzJQTn5mAtynJ5eIl8pNX2Ah25/GZvZWDEJ/EKiVwfu7DGo8HnIwxlbu4xPi+C0SsHWCCNw=="
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="></script>
+    <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 480px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-message"></div>
+
+    {{>header}}
+
+    <div class="container">
+        <div class="signupbox">
+            <div class="row">
+                <div class="col-md-12 naslov">
+                    <br><br>
+                    <h1>Izmjena ponude</h1>
+                </div>
+
+            </div>
+            <br><br>
+            <form method="POST" action="" id="ponudaForm" enctype="multipart/form-data" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label" name="naziv">Naziv:</label><br>
+                        <input class="form-control" type="text" placeholder="Unesi naziv" value="{{ponuda.naziv}}"
+                            name="naziv" id="naziv" /><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label" name="duracija">Trajanje (u danima):</label><br>
+                        <input class="form-control" type="number" placeholder="Unesi trajanje"
+                            value="{{ponuda.duracija}}" name="duracija" id="duracija" /> <br>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label" name="velicinaGrupe">Broj ljudi:</label><br>
+                        <input class="form-control" type="number" placeholder="Unesi broj"
+                            value="{{prikazSlobodnihMjesta ponuda.pocetniDatumi ponuda.brojSlobodnih}}"
+                            name="velicinaGrupe" id="velicinaGrupe" />
+                        <br>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label" name="cijena">Cijena:</label><br>
+                        <input class="form-control" type="number" placeholder="Unesi cijenu"
+                            value="{{ponuda.pocetnaCijena}}" name="cijena" id="cijena" />
+                        <br>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label" name="dodatak">Dodatak na cijenu:</label><br>
+                        <input class="form-control" type="number" placeholder="Unesi cijenu"
+                            value="{{ponuda.dodatakNaCijenu}}" name="dodatak" id="dodatak" />
+                        <br>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label" name="opis">Opis:</label><br>
+                        <textarea class="form-control" id="opis" name="opis" rows="15" cols="80">{{#each ponuda.opis}}{{this}}
+                    {{/each}}
+                    </textarea><br>
+                    </div>
+                    <br>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label name="photo" for="photo"> Dodajte sliku: </label><br />
+                        <input type="file" accept="image/*" name="pocetnaSlika" id="pocetnaSlika" />
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label name="photo" for="photo"> Dodajte slike: </label><br />
+                        <input type="file" accept="image/*" name="slike" id="slike" multiple />
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label" name="datumi">Datumi:</label><br>
+                        <input class="form-control" type="text" placeholder="Unesi datume pocetka" value="{{datumi}}"
+                            name="datumi" id="datumi" />
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label" name="lokacije">Lokacije:</label><br>
+                        <input class="form-control" type="text" placeholder="GPS koordinate lokacija"
+                            value="{{#each ponuda.lokacije}}--{{#each this.coordinates}}{{this}},{{/each}}{{/each}}"
+                            name="lokacije" id="lokacije" />
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="map"></div>
+                    </div>
+                </div>
+                <br>
+                <button id="confirmPosition" class="btn btn-info">Odaberi lokaciju</button>
+                <br><br>
+
+                <label class="form-label" name="cijena">Adrese (Po danima):</label><br>
+                <div id="adrese">
+                    <div id="drzacBrojaDana" style="visibility: hidden;">{{lokacije.length}}</div>
+                    {{#each lokacije }} <input class="form-control" type="text"
+                        placeholder="Prvi dan (adresa 1, adresa 2...)" value="{{this}}" name="cijena"
+                        id="dan-{{@index}}" />
+                    {{/each}}
+                </div><br>
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <button style="margin-bottom: 5px;" class="form-sign-btn btn btn-primary" id="dodaj-dan">Dodaj
+                            dan</button>
+
+                    </div>
+                    <div class="col-md-6 text-center" style="margin-bottom: 5px;">
+                        <button style="margin-bottom: 5px;" class="form-sign-btn btn btn-warning" id="obrisi-dan">Obrisi
+                            dan</button>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-4 text-center">
+                        <label class="form-label" name="vodici">Vodici:</label><br>
+                        <select name="role" id="vodici" class="form-control" multiple>
+                            {{#each ponuda.vodici}}
+                            <option selected value="{{this.id}}">{{this.korisnickoIme}}-{{this.ime}}
+                                {{this.prezime}}
+                            </option>
+                            {{/each}}
+                            {{#each slobodniVodici}}
+                            <option value="{{this.id}}">{{this.korisnickoIme}}-{{this.ime}} {{this.prezime}}
+                            </option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label" name="kljucneRijeci">Kljucne rijeci:</label><br>
+                        <input class="form-control" type="text"
+                            value="{{#each ponuda.kljucneRijeci}}{{this}}{{#ifNotEquals @index ../duljinaKljucnihRijeci}}, {{/ifNotEquals}}{{/each}}"
+                            name="kljucneRijeci" id="kljucneRijeci" /><br>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <button class="form-sign-btn btn btn-primary" id="izmjenaButton" type="submit"
+                            value="{{ponuda.id}}">IZMIJENI</button><br>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="/js/izmjenaPonude.js"></script>
+
+    {{>footer}}
+
+
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+
+</body>
+
+
+</html>

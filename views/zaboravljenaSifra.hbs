@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <title>Zaboravljena sifra</title>
+    {{>links}}
+
+</head>
+
+<body>
+    <div id="login-message"></div>
+
+    <div class="container">
+        <!--Naslov-->
+        <br> <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <br>
+                <h1>Zaboravljena šifra</h1>
+            </div>
+
+        </div>
+        <br><br><br> <br><br><br>
+
+        <div class="">
+
+            <form method="POST" action="" id="forgotPass" autocomplete="off">
+                <div class="row text-center">
+                    <div class="col-md-6 col-md-offset-3">
+                        <label class="form-label" name="firstname">Email:</label><br>
+                        <input class="form-control" type="email" placeholder="Unesite email..." value="" name="email"
+                            id="email" /><br>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button class="form-sign-btn btn btn-primary" type="submit">Pošalji</button><br>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="/js/zaboravljenaSifra.js"></script>
+
+</body>
+
+</html>

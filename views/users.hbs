@@ -1,0 +1,227 @@
+<html>
+
+<head>
+
+    {{>links}}
+    <title>Korisnici | Tourist</title>
+
+</head>
+
+<body>
+
+    {{>header}}
+
+    <div id="login-message"></div>
+
+
+    <div class="container" style="min-height: 87%;">
+        <div class="row">
+            <div class="col-md-4 naslov">
+                <h1>Korisnici</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <div class="search-form">
+                    <form id="korisnikFormFilter" autocomplete="off">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <br>
+                                <input id="query-FilterForma" placeholder="Unesite korisnicko ime..."
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-2">
+                                <br>
+                                <button class="btn btn-primary" type="submit">Pretrazi</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <label>Od:</label>
+                                <input id="pocetniDatum-FilterForma" type="date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+
+                                <label>Do:</label>
+                                <input id="krajnjiDatum-FilterForma" type="date" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                    <br><br>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div id="svi-korisnici">
+                    {{#each korisnici}}
+                    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                    <div id="{{this.id}}">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-xs-offset-1">
+                                <h1>{{this.korisnickoIme}}</h1>
+                            </div>
+                            <div class="col-md-3 col-xs-5 text-left">
+                                <p>{{subString this.datumKreacije 0 15}}</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <img class="img-responsive" style="max-width: 100px; border-radius: 50%;"
+                                    src="/img/korisnici/{{this.fotografija}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-left col-xs-offset-1">
+                                <h3>{{this.ime}} {{this.prezime}}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-xs-offset-1">
+                                <p1>{{this.email}}</p1><br>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                {{#if this.aktivnost}}
+                                <p1><b>AKTIVAN</b></p1>
+                                {{else}}
+                                <p1><b>OBRISAN</b></p1>
+                                {{/if}}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p1>{{this.uloga}}</p1>
+                            </div>
+
+                            {{#if this.aktivnost}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-danger"
+                                    href="/korisnici/brisanjeJednog/{{this.id}}">
+                                    <h3>OBRISI</h1>
+                                </a>
+                            </div>
+                            {{#ifEquals this.uloga "turist"}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-success"
+                                    href="/korisnici/zaposljavanjeJednog/{{this.id}}">
+                                    <h3>ZAPOSLI</h1>
+                                </a>
+                            </div>
+                            {{/ifEquals}}
+                            {{#ifEquals this.uloga "zaposlenik"}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-primary"
+                                    href="/korisnici/otpustanjeJednog/{{this.id}}">
+                                    <h3>OTPUSTI</h1>
+                                </a>
+                            </div>
+                            {{/ifEquals}}
+                            {{else}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-bottom: 10px;" class="btn btn-primary"
+                                    href="/korisnici/vracanjeJednog/{{this.id}}">
+                                    <h3>VRATI</h1>
+                                </a>
+                            </div>
+                            {{/if}}
+
+
+                        </div>
+
+                    </div>
+                    <br>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {{>footer}}
+
+    <script id="korisnici-template" type="text/html">
+        \{{#korisnici}}
+                    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+                    <div id="\{{this._id}}">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6 col-xs-offset-1">
+                                <h1>\{{this.korisnickoIme}}</h1>
+                            </div>
+                            <div class="col-md-3 col-xs-5 text-left">
+                                <p>\{{subString this.datumKreacije 0 10}}</p>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <img class="img-responsive" style="max-width: 100px; border-radius: 50%;"
+                                    src="/img/korisnici/\{{this.fotografija}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-left col-xs-offset-1">
+                                <h3>\{{this.ime}} \{{this.prezime}}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 col-xs-offset-1">
+                                <p1>\{{this.email}}</p1><br>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                \{{#if this.aktivnost}}
+                                <p1><b>AKTIVAN</b></p1>
+                                \{{else}}
+                                <p1><b>OBRISAN</b></p1>
+                                \{{/if}}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p1>\{{this.uloga}}</p1>
+                            </div>
+
+                            \{{#if this.aktivnost}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-danger " href="/korisnici/brisanjeJednog/\{{this._id}}">
+                                    <h3>OBRISI</h1>
+                                </a>
+                            </div>
+                            \{{#ifEquals this.uloga "turist"}}
+                            <div style="margin-top: 10px;" class="col-md-2 col-xs-6 text-center">
+                                <a class="btn btn-success" href="/korisnici/zaposljavanjeJednog/\{{this._id}}">
+                                    <h3>ZAPOSLI</h1>
+                                </a>
+                            </div>
+                            \{{/ifEquals}}
+                            \{{#ifEquals this.uloga "zaposlenik"}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-primary" href="/korisnici/otpustanjeJednog/\{{this._id}}">
+                                    <h3>OTPUSTI</h1>
+                                </a>
+                            </div>
+                            \{{/ifEquals}}
+                            \{{else}}
+                            <div class="col-md-2 col-xs-6 text-center">
+                                <a style="margin-top: 10px;" class="btn btn-primary" href="/korisnici/vracanjeJednog/\{{this._id}}">
+                                    <h3>VRATI</h1>
+                                </a>
+                            </div>
+                            \{{/if}}
+
+
+                        </div>
+
+                    </div>
+                    <br>
+         \{{/korisnici}}
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"
+        integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/prikazKorisnika.js"></script>
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+</html>

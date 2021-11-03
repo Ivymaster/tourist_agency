@@ -1,0 +1,111 @@
+<html>
+
+<head>
+
+    {{>links}}
+    <title>Početna | Tourist</title>
+
+</head>
+
+<body>
+
+
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(30).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+
+    {{>header}}
+    <div id="login-message"></div>
+    <br><br><br> <br> <br>
+
+
+    <div class="container" style="min-height: 74%;">
+
+        <div class="row">
+            <div class="col-md-12  oglas-naslov text-justify">
+                <h1>{{oglas.naslov}}</h1>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12 oglas-datum ">
+                <p>{{subString oglas.datumKreacije 0 15}}</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12 oglas-sazetak text-justify">
+                {{#each oglas.sazetak}}
+                <h4><b>{{this}}</b></h4>
+                {{/each}}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12 oglas-sadrzaj text-justify">
+                {{#each oglas.sadrzaj}}
+                <p>{{this}}</p>
+                {{/each}}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4 oglas-sadrzaj">
+                <h4><b>Dokumenti:</b></h4>
+            </div>
+        </div>
+        {{#each oglas.dokumenti}}
+        <div class="row">
+            <div class="col-md-12 oglas-sadrzaj">
+                {{#ifEquals ../oglas.status "generalni"}}
+                <a href="/preuzimanjeJavneDatoteke/{{this}}">{{this}}</a>
+                {{/ifEquals}}
+
+                {{#ifEquals ../oglas.status "agencijski"}}
+                <a href="/preuzimanjeAgencijskeDatoteke/{{this}}">{{this}}</a>
+                {{/ifEquals}}
+
+                {{#ifEquals ../oglas.status "specificni"}}
+                <a href="/preuzimanjeSpecificneDatoteke/{{this}}/{{../oglas.id}}">{{this}}</a>
+                {{/ifEquals}}
+            </div>
+        </div>
+        {{/each}}
+        <br>
+    </div>
+
+
+    {{>footer}}
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script type="module" src="/js/prikazOglasa.js"></script>
+
+
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+
+</html>

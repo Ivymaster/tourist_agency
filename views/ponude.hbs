@@ -1,0 +1,175 @@
+<html>
+
+<head>
+
+    {{>links}}
+    <title>Početna | Tourist</title>
+
+</head>
+
+<body style="background-color: eeeeee;">
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(20).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+    {{>header}}
+    <div id="login-message"></div>
+
+    <section id="ponude" style="min-height: 77%;">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <br>
+                    <h1>PONUDE</h1>
+                    <br><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <div class="search-form">
+                        <form id="ponudaFormFilter" autocomplete="off">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <br>
+                                    <input id="query-FilterForma" placeholder="Unesite riječ..." class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <br>
+                                    <button class="btn btn-primary" type="submit">Pretrazi</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <br>
+                                    <label>Od:</label>
+                                    <input id="pocetniDatum-FilterForma" type="date" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <br>
+
+                                    <label>Do:</label>
+                                    <input id="krajnjiDatum-FilterForma" type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br>
+
+                                <div class="col-md-5">
+                                    <label>Od:</label>
+                                    <input id="pocetnaCijena-FilterForma" type="number" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <br>
+                                    <i class="fa fa-eur"></i>
+                                </div>
+                                <div class="col-md-5">
+                                    <label>Do:</label>
+                                    <input id="krajnjaCijena-FilterForma" type="number" class="form-control">
+                                </div>
+                                <div class="col-md-1">
+                                    <br>
+                                    <i class="fa fa-eur"></i>
+                                </div>
+                            </div>
+                        </form>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="sve-ponude">
+                {{#each ponude}}
+
+                <div class="col-md-4">
+                    <div class="prikaz {{this.status}}">
+                        <img src="/img/ponude/{{this.pocetnaSlika}}" alt="Card image cap" style="max-height: 200px">
+                        <div class="prikaz-sadrzaj">
+                            <h4>{{ subString (datumPonudeNaPrikazuPonuda this.pocetniDatumi) 0 15}}</h4>
+                            <h3>{{subString this.naziv 0 20}}</h3>
+                            <p>{{subString (specificElement this.opis 0) 0 30}}...</p>
+                        </div>
+                        <a href="/ponude/{{this.id}}">
+                            <h3>Detalji</h1>
+                        </a>
+                        <div class="prikaz-brojke">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <h4>{{this.krajnjaCijena}} <i class="fa fa-eur"></i></h4>
+                                </div>
+                                <div class="col-xs-4 center-field">
+                                    <h4>{{this.duracija}} dana</h4>
+                                </div>
+                                <div class="col-xs-4">
+                                    <h4>{{prikazSlobodnihMjesta this.pocetniDatumi this.brojSlobodnih}} <i
+                                            class="fa fa-user"></i></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+
+            </div>
+            <br> <br>
+        </div>
+    </section>
+
+
+
+
+    <script id="ponude-template" type="text/html">
+        \{{#ponude}}
+                          <div class="col-md-4 text-right">
+                    <div class="prikaz \{{this.status}}">
+                        <img src="/img/ponude/\{{this.pocetnaSlika}}" alt="Card image cap" style="max-height: 200px">
+                        <div class="prikaz-sadrzaj">
+                            <h4>\{{ subString (datumPonudeNaPrikazuPonuda this.pocetniDatumi) 0 10}}</h4>
+                            <h3>\{{this.naziv}}</h3>
+                            <p>\{{subString this.opis 0 30}}...</p>
+                        </div>
+                        <a href="/ponude/\{{this._id}}">
+                            <h3>Detalji</h1>
+                        </a>
+                        <div class="prikaz-brojke">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <h4>\{{this.krajnjaCijena}} <i class="fa fa-eur"></i></h4>
+                                </div>
+                                <div class="col-xs-4 center-field">
+                                    <h4>\{{this.duracija}} dana</h4>
+                                </div>
+                                <div class="col-xs-4">
+                                    <h4>\{{prikazSlobodnihMjesta this.pocetniDatumi this.brojSlobodnih}} <i class="fa fa-user"></i></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        \{{/ponude}}
+        
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"
+        integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/prikazPonuda.js"></script>
+
+    {{>footer}}
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+</html>

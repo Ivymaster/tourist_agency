@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <title>Kreiranje Ponude</title>
+    {{>links}}
+
+</head>
+
+<body>
+
+    <div id="login-message"></div>
+
+    {{>header}}
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4 naslov">
+                <br>
+                <h1>Kreiranje oglasa</h1>
+            </div>
+
+        </div>
+        <form method="POST" action="" id="" enctype="multipart/form-data" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-12  ">
+                    <br>
+                    <label class="form-label" name="naslov">Naslov:</label><br>
+                    <input class="form-control" type="text" placeholder="Unesi naziv" value="" name="naslov"
+                        id="naslov" />
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12  ">
+                    <br>
+                    <label class="form-label" name="sazetak">Sažetak:</label><br>
+                    <textarea class="form-control" id="sazetak" placeholder="Unesite sazetak" name="sazetak" rows="4"
+                        cols="80"></textarea><br>
+
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12  ">
+                    <br>
+                    <label class="form-label" name="sadrzaj">Sadržaj:</label><br>
+                    <textarea class="form-control" id="sadrzaj" placeholder="Unesite sadrzaj" name="sadrzaj" rows="4"
+                        cols="80"></textarea><br>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12  ">
+                    <br>
+                    <label name="dokumenti" for="photo"> Dodajte dokumente: </label><br />
+                    <input type="file" accept="*" name="dokumenti" id="dokumenti" class="form-control-file" multiple />
+
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <br>
+                    <label class="form-label" name="status">Status:</label><br>
+                    <select name="status" id="status" class="form-control">
+                        <option value="">--Odaberi status--</option>
+                        <option value="generalni">generalni</option>
+                        <option value="agencijski">agencijski</option>
+                        <option value="specificni">specificni</option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12  ">
+                    <label class="form-label" name="zaposlenik" style="display: none;">Namjena:</label><br>
+                    <select name="status" id="zaposlenik" multiple style="display: none;">
+                        <option value="">--Odaberi zaposlenika--</option>
+                        {{#each vodici}}
+                        <option value="{{this.id}}">{{this.korisnickoIme}}-{{this.ime}} {{this.prezime}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-12  text-center">
+                    <button class="form-sign-btn btn btn-primary" id="oglasFormBtn" type="">KREIRAJ</button><br><br>
+
+                </div>
+
+            </div>
+
+
+        </form>
+
+        <br><br><br><br>
+    </div>
+
+    {{>footer}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="/js/kreiranjeOglasa.js"></script>
+
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+
+</html>

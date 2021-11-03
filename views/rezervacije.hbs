@@ -1,0 +1,272 @@
+<html>
+
+<head>
+
+    {{>links}}
+    <title>Rezervacije | Tourist</title>
+
+</head>
+
+<body>
+
+
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(30).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+
+    {{>header}}
+    <div id="login-message"></div>
+
+    <div class="container" style="min-height: 87%;">
+        <div class="row">
+            <div class="col-md-4 naslov">
+                <h1>Rezervacije</h1><br><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form id="rezervacijaFormFilter" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-7 col-xs-12">
+                            <input id="query-FilterForma" placeholder="Unesite korisnicko ime ili ponudu"
+                                class="form-control"><br>
+                        </div>
+                        <div class="col-md-3 ">
+                            <select name="status" class="form-control" id="status-FilterForma">
+                                <option value="placeno">Placeno</option>
+                                <option value="rezervirano">Rezervirano</option>
+                                <option value="obrisano">Obrisano</option>
+                            </select> <br>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <button class="btn btn-primary" type="submit">Pretrazi</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <br>
+                            <label>Od:</label>
+                            <input id="pocetniDatum-FilterForma" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <br>
+
+                            <label>Do:</label>
+                            <input id="krajnjiDatum-FilterForma" type="date" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <br>
+            <div class="col-md-2 col-md-offset-2">
+                <h3>Total: </h3>
+            </div>
+            <div class="col-md-8 ">
+                <h3 id="totalnaCijenaRezervacija">{{totalnaCijena}}</h3>
+            </div>
+            <br>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div id="sve-rezervacije">
+
+                    {{#each rezervacije}}
+                    <div class="row rezervacija-prikaz {{this.status}}">
+                        <div class="col-xs-10 col-xs-offset-1 ">
+                            <div id="{{this.id}}">
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-broj-karata">
+                                        <h3>{{this.brojKarata}} - {{#ifEquals this.brojKarata
+                                            1}}karta{{/ifEquals}}{{#ifRange this.brojKarata 1
+                                            5}}karte{{/ifRange}}{{#ifGreaterThan this.brojKarata
+                                            4}}karata{{/ifGreaterThan}}</h3>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-cijena text-center">
+                                        <h3>{{this.cijena}} <i class="fa fa-eur"></i> (
+                                            <p1>{{this.dodatak}}</p1> <i class="fa fa-eur"></i> )
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-status">
+                                        <h3>{{this.status}}</h3>
+                                        <p> {{ subString this.datumKreacije 0 15}} {{#ifEquals this.status
+                                            "placeno"}}/{{ subString this.datumPlacanja 0
+                                            15}}{{/ifEquals}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-sobe">
+                                        <p1>{{this.sobe}}</p1>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-ponuda">
+                                        <h4>PONUDA: <a href="/ponude/{{this.ponuda.id}}">{{this.ponuda.naziv}}</a></h4>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-korisnik">
+                                        <h4>KORISNIK: <a
+                                                href="/rezervacije/vlasnikRezervacije?korisnickoIme={{this.korisnik.korisnickoIme}}">{{this.korisnik.korisnickoIme}}</a>
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-status">
+                                        <br>
+                                        <p> {{ subString (datumPonudeNaRezervaciji this.datumPocetkaPonude
+                                            this.ponuda.pocetniDatumi) 0 15}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class=" row">
+                                    {{#ifEquals this.status "rezervirano"}}
+                                    <div class="col-md-6 rezervacija-obrisi">
+                                        <button class="brisanjePonudeBtn btn btn-danger" value="{{this.id}}"> OBRISI
+                                        </button>
+                                    </div>
+                                    {{/ifEquals}}
+                                </div>
+                                <!--
+                                <form id="forma-{{this.id}}">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label" id="" name="karte">Ocjena:</label><br>
+                                            <input class="form-control" type="number"
+                                                placeholder="Odaberi ocjenu (max {{ponuda.brojSlobodnih}})"
+                                                value="{{this.recenzija.ocjena}}" name="karte" id="ocjena-{{this.id}}"
+                                                max="{{5}}" />
+                                        </div>
+                                        <div class="col-md-9">
+                                            <label class="form-label" id="" name="karte">Komentar:</label><br>
+                                            <input class="form-control" type="text" placeholder="Upisi komentar"
+                                                value="{{this.recenzija.komentar}}" name="karte"
+                                                id="komentar-{{this.id}}" max="{{5}}" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button class="recenzijaFormaBtn btn btn-primary" value="{{this.id}}">
+                                                Spremi </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+
+                                <br> -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{/each}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script id="rezervacije-template" type="text/html">
+        \{{#noveRezervacije}}
+                            <div class="row rezervacija-prikaz \{{this.status}}">
+                        <div class="col-xs-10 col-xs-offset-1">
+                            <div id="\{{this.id}}">
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-broj-karata">
+                                        <h3>\{{this.brojKarata}} - \{{#ifEquals this.brojKarata
+                                            1}}karta\{{/ifEquals}}\{{#ifRange this.brojKarata 1
+                                            5}}karte\{{/ifRange}}{{#ifGreaterThan this.brojKarata
+                                            4}}karata{{/ifGreaterThan}}</h3>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-cijena text-center">
+                                        <h3>\{{this.cijena}} <i class="fa fa-eur"></i> (
+                                            <p1>\{{this.dodatak}}</p1> <i class="fa fa-eur"></i> )
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-status">
+                                        <h3>\{{this.status}}</h3>
+                                        <p> \{{ subString this.datumKreacije 0 10}} \{{#ifEquals this.status "placeno"}}/ \{{ subString this.datumPlacanja 0
+                                            10}} \{{/ifEquals}}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-sobe">
+                                        <p1>\{{this.sobe}}</p1>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 rezervacija-ponuda">
+                                        <h4>PONUDA: <a href="/ponude/\{{this.ponuda.id}}">\{{this.ponuda.naziv}}</a></h4>
+                                    </div>
+                                    <div class="col-md-6 rezervacija-korisnik">
+                                        <h4>KORISNIK: <a
+                                                href="/korisnici\{{this.korisnik.id}}">\{{this.korisnik.korisnickoIme}}</a>
+                                        </h4>
+                                    </div>
+                                      
+                                    <div class="col-md-6 rezervacija-status">
+                                        <br>
+                                        <p> \{{ subString (datumPonudeNaRezervaciji this.datumPocetkaPonude
+                                            this.ponuda.pocetniDatumi) 0 10}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                     \{{#ifEquals this.status "rezervirano"}}
+                                    <div class="col-md-6 rezervacija-obrisi">
+                                        <button class="brisanjePonudeBtn btn btn-danger" value="\{{this.id}}"> OBRISI
+                                        </button>
+                                    </div>
+                                    \{{/ifEquals}}
+                                    <!--<div class="col-md-6 rezervacija-kupi">
+                                        <button class="kupovanjeSaRezervacijBtn btn btn-success"
+                                            value="\{{this.ponuda.id}}--\{{this.brojKarata}}--\{{this.dodatak}}--\{{this.sobe}}">
+                                            KUPI
+                                        </button>
+                                    </div>-->
+                                </div>
+
+                                
+
+
+                                <br>
+                            </div>
+                        </div>
+
+                    </div>
+        \{{/noveRezervacije}}
+        <br>
+        
+    </script>
+    {{>footer}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"
+        integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/prikazRezervacija.js"></script>
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+</html>

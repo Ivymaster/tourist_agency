@@ -1,0 +1,371 @@
+﻿<html>
+
+<head>
+
+    {{>links}}
+    <link rel="stylesheet" href="/css/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl-carousel/owl.theme.default.min.css">
+    <title>Početna | Tourist</title>
+
+</head>
+
+<body>
+
+    {{>header}}
+
+    <div id="login-message"></div>
+
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(10).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+    <!-- HOME SEKCIJA -->
+    <section id="home">
+        <video id="home-video" autoplay muted loop poster="/video/home-video/solo.jpg">
+            <source src="/video/home-video/turist.webm" type="video/webm" />
+            <source src="/video/home-video/solo.ogv" type="video/ogg" />
+            <source src="/video/home-video/solo.mp4" type="video/mp4" />
+        </video>
+        <div id="home-sadrzaj">
+            <div class="text-center" id="home-sadrzaj-unutrasnjost">
+                <br><br>
+                <div id="home-naslov">
+                    <h1> Osjeti prirodu </h1>
+                </div>
+                <div id="home-tekst">
+                    <p>Reci da avanturama, upoznaj prirodu i njene ljepote </p>
+                </div>
+                <div id="home-dugme">
+                    <a id="home-strlica" href="/ponude" class="btn btn-home glatki-prijelaz">ZAPOČNI</a>
+                </div>
+            </div>
+        </div>
+        <a href="#top-ponude" id="home-strelica">
+            <i class="fa fa-angle-double-down fa-3x"></i>
+        </a>
+
+    </section>
+    <div id="overlay"></div>
+    <!-- -->
+
+    <!-- TOP PONUDE -->
+    <section id="top-ponude">
+        <div class="container">
+            <div class="opis">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1>TOP PONUDE</h1>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row center">
+                <div class="col-md-12 ">
+                    <div class=" owl-carousel owl-theme prikaz-top-ponuda">
+                        {{#each najboljePonude}}
+                        <div class="item text-center">
+                            <img src="/img/ponude/{{this.pocetnaSlika}}" class="img-responsive" alt="...">
+                            <h3><a href="/ponude/{{this.id}}">{{this.naziv}}</a></h3>
+                        </div>
+                        {{/each}}
+
+                    </div>
+                </div>
+            </div>
+
+    </section>
+
+    <!-- PRVA PARALAKS SLIKA-->
+    <div id="pimg1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="parallax-citat">
+                        <h3><i class="fa fa-quote-left"></i> Sreća – to je biti s prirodom, gledati je i s njom
+                            govoriti.. <i class="fa fa-quote-right"></i> </h3>
+                        <p>- L. N. Tolstoj -</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOVA PONUDA -->
+    <section id="nova-ponuda">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>NOVA PONUDA</h1>
+                </div>
+
+            </div>
+            {{#if najnovijaPonuda}}
+            <div class="sadrzaj">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div>
+                            <img src="/img/ponude/{{najnovijaPonuda.pocetnaSlika}}" class="img-fluid" alt="...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>{{najnovijaPonuda.naziv}}</h3>
+                        <p class="text-justify">{{subString najnovijaPonuda.opis 0 700}}...</p>
+                        <h3>{{najnovijaPonuda.krajnjaCijena}} <i class="fa fa-eur"></i></h3>
+                        <h5>{{najnovijaPonuda.duracija}} dana - {{najnovijaPonuda.brojSlobodnih}} <i
+                                class="fa fa-user"></i></h5>
+                        <a class="btn btn-primary" style="min-width: 100px"
+                            href="/ponude/{{najnovijaPonuda.id}}">DETALJI</a>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+    </section>
+
+    <!-- GLAVNE BROJKE PREDUZECA-->
+    <section id="brojke-poduzeca" style="border-top: 2px #005500 solid;border-bottom: 2px #005500 solid;">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" style="margin-bottom: 5px;">
+                    <h3 id="" style="font-size: 50; font-family:Arial, Helvetica, sans-serif">{{brojke.ponude}}</h3><br>
+                    <h4>PONUDA</h4>
+                </div>
+                <div class="col-md-4" style="margin-bottom: 5px;">
+                    <h3 id="" style="font-size: 50;font-family:Arial, Helvetica, sans-serif">{{brojke.korisnici}}</h3>
+                    <br>
+                    <h4>KORISNIKA</h4>
+                </div>
+                <div class="col-md-4" style="margin-bottom: 5px;">
+                    <h3 id="" style="font-size: 50;font-family:Arial, Helvetica, sans-serif">{{brojke.recenzije}}</h3>
+                    <br>
+                    <h4>5+ RECENZIJA</h4>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- O NAMA -->
+    <section id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>O NAMA</h1>
+                </div>
+
+            </div>
+            <div class="sadrzaj">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-poravnanje"> Agencija, nastala 2019. godine, locirana je u centru grada Bihaća.
+                            Nudimo širok
+                            dijapazon ponuda, kreiranih sa jednim ciljem, povezivanja čovjeka i prirode. Iako
+                            funkcioniramo u potpunosti
+                            putem interneta, dostupni smo također u agencijskom uredu, u periodu od 8 do 17
+                            sati.<br><br>
+                            Svaka
+                            ponuda je popraćena
+                            prisustvom iskusnih vodiča, koji će odgovoriti na svako Vaše pitanje. Sva oprema koju
+                            određena ponuda
+                            zahtjeva, je osigurana od strane nas.
+                        </p>
+
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="owl-carousel zaposlenici-prikaz owl-theme ">
+                            {{#each zaposlenici}}
+                            <div class="item">
+                                <img src="/img/korisnici/{{this.fotografija}}" class="img-fluid" alt="..."
+                                    style="max-height:200px; max-width:200px;margin:auto;">
+                                <div class="zaposlenici-prikaz-sadrzaj ">
+                                    <h4>{{this.ime}} {{this.prezime}}</h4>
+                                    <p style="margin-top:0px; margin-bottom:0;">{{this.uloga}}</p>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </section>
+
+    <!-- DRUGA PARALAKS SLIKA-->
+    <div id="pimg1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="parallax-citat">
+                        <h3><i class="fa fa-quote-left"></i> Sreća – to je biti s prirodom, gledati je i s njom
+                            govoriti.. <i class="fa fa-quote-right"></i> </h3>
+                        <p>- L. N. Tolstoj -</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KONTAKT-->
+    <section id="kontakt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>KONTAKT</h1>
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="lokacija">
+                        <h4><b>BIHAC</b></h4><br>
+                        <ul class="informacije">
+                            <li><i class="fa fa-mobile"></i> <span>+(387) 61 555 333</span></li>
+                            <li><i class="fa fa-envelope"></i> <span>ivymaster95@gmail.com</span></li>
+                            <li><i class="fa fa-map-marker"></i> <span>Bosanskih kraljeva 129</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <form action="" autocomplete="off">
+                        <div class="form-group">
+                            <label for="kontakt-korisnickoIme">IME</label>
+                            <input type="text" class="form-control" id="kontakt-korisnickoIme"
+                                aria-describedby="emailHelp" placeholder="Unesite ime..."
+                                value="{{korisnik.korisnickoIme}}">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="kontakt-email">EMAIL</label>
+                            <input type="email" class="form-control" id="kontakt-email" placeholder="Unesite email..."
+                                value="{{korisnik.email}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="kontakt-mob">MOB</label>
+                            <input type="text" class="form-control" id="kontakt-mob" aria-describedby="emailHelp"
+                                placeholder="Unesite mobitel...">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="kontakt-poruka">PORUKA</label>
+                            <input type="text" class="form-control" id="kontakt-poruka"
+                                placeholder="Unesite sadrzaj...">
+                        </div>
+                        <button type="submit" id="send-mail-button" class="btn btn-primary">POSALJI</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!--UKIDANJE SOCKETA ZA PRIJAVLJENOG ZAPOSLENIKA -->
+    {{#ifNotEquals status "turist"}}
+    <div id="zaposlenikDisconnectOkidac"></div>
+    {{/ifNotEquals}}
+
+
+
+    <!--FORMA ZA REAL TIME CHAT KOMUNIKACIJU -->
+    {{#ifDoubleEquals status "turist" "none"}}
+
+
+    <section id="live-chat">
+
+        <div class="chat">
+            <div class="chat__main">
+                <div id="message-board" class="chat__messages"></div>
+
+                <div class="compose">
+                    <input id="message" placeholder="Unesite poruku..." style="margin-left: 5px ;" required
+                        autocomplete="off">
+                    <button style="margin-right: 5px ;" id="submit">Posalji</button>
+                    <button id="send-location" style="display:none;">Send Location</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SKRIPTE ZA REAL TIME CHAT KOMUNIKACIJU -->
+    <script id="message-template" type="text/html">
+                    <div class="message \{{username}}"  style="margin:5 5 5 5;" style="color:black;">
+                        <p style="color:black;">
+                            <span class="message__name">\{{username}}</span>
+                            <span class="message__meta">\{{createdAt}}</span>
+                        </p>
+                        <p style="color:black;overflow-wrap: break-word">\{{text}}</p>
+                    </div>
+        </script>
+
+    <script id="location-template" type="text/html">
+            <div class="message" >
+                <p>
+                    <span class="message__name">\{{username}}</span>
+                    <span class="message__meta">\{{createdAt}}</span>
+                </p>
+                <p ><a href="{{url}}" target="_blank">Moja trenutna lokacija</a></p>
+            </div>
+        </script>
+
+    <script id="sidebar-template" type="text/html">
+            <h2 class="room-title">{{room}}</h2>
+            <h3 class="list-title">Users</h3>
+            <ul class="users">
+                \{{#users}}
+                    <li>\{{username}}</li>
+                \{{/users}}
+            </ul>
+        </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.js"></script>
+    <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/qs/6.5.1/qs.min.js"></script>
+
+
+    <script src="/js/chatKorisnik.js"></script>
+
+
+
+    {{/ifDoubleEquals}}
+
+    <script type="module" src="/js/kontakt.js"></script>
+
+
+    {{>footerLandingPage}}
+
+
+
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+
+    <script>
+        $('#live-chat').css("left", (($(this).width() - 300) / $(this).width()) * 100 + "%");
+        $(window).bind("resize", function () {
+
+            $('#live-chat').css("left", ($(this).width() - 300) / $(this).width() * 100 + "%");
+        })
+    </script>
+</body>
+
+</html>

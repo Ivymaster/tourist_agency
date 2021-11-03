@@ -1,0 +1,181 @@
+<html>
+
+<head>
+    <title>Kreiranje Ponude</title>
+    {{>links}}
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-multidatespicker/1.6.6/jquery-ui.multidatespicker.js"
+        integrity="sha512-shDVoXhqpazAEKzSzJQTn5mAtynJ5eIl8pNX2Ah25/GZvZWDEJ/EKiVwfu7DGo8HnIwxlbu4xPi+C0SsHWCCNw=="
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="></script>
+    <script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>
+    <style type="text/css">
+        #map {
+            width: 100%;
+            height: 480px;
+        }
+    </style>
+</head>
+
+<body>
+
+    {{>header}}
+
+    <div id="login-message"></div>
+
+    <div class="container kreiranje-ponude">
+        <!--Naslov-->
+        <div class="row">
+            <div class="col-md-4">
+                <br>
+                <h1>Kreiranje ponude</h1>
+            </div>
+
+        </div>
+
+
+        <form method="POST" action="" id="ponudaForm" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" name="naziv">Naziv:</label><br>
+                    <input class="form-control" type="text" placeholder="Unesi naziv" value="" name="naziv"
+                        id="naziv" /><br>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label" name="duracija">Trajanje (u danima):</label><br>
+                    <input class="form-control" type="number" placeholder="Unesi trajanje" value="" name="duracija"
+                        id="duracija" /> <br>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" name="velicinaGrupe">Broj ljudi:</label><br>
+                    <input class="form-control" type="number" placeholder="Unesi broj" value="" name="velicinaGrupe"
+                        id="velicinaGrupe" />
+                    <br>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" name="cijena">Cijena:</label><br>
+                    <input class="form-control" type="number" placeholder="Unesi cijenu" value="" name="cijena"
+                        id="cijena" />
+                    <br>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" name="dodatak">Dodatak na cijenu:</label><br>
+                    <input class="form-control" type="number" placeholder="Unesi cijenu" value="" name="dodatak"
+                        id="dodatak" />
+                    <br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" name="opis">Opis:</label><br>
+                    <textarea class="form-control" id="opis" name="opis" rows="15" cols="80"></textarea><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" name="datumi">Datumi:</label><br>
+                    <input class="form-control" type="text" placeholder="Unesi datume pocetka" name="datumi"
+                        id="datumi" /><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" name="lokacije">Lokacije:</label><br>
+                    <input class="form-control" type="text" placeholder="GPS koordinate lokacija" value=""
+                        name="lokacije" id="lokacije" />
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="map"></div>
+                    <br>
+                    <button id="confirmPosition" class=" btn btn-info">Odaberi lokaciju</button>
+                    <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <br>
+                    <label class="form-label" name="cijena">Adrese (Po danima):</label><br>
+                    <div id="adrese">
+                        <input class="form-control" type="text" placeholder="Prvi dan (adresa 1, adresa 2...)" value=""
+                            name="cijena" id="dan-0" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 text-center">
+                    <button class="form-sign-btn btn btn-primary" id="dodaj-dan">Dodaj dan</button>
+
+                </div>
+                <div class="col-md-6 text-center">
+                    <button class="form-sign-btn btn btn-warning" id="obrisi-dan">Obrisi dan</button>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <br>
+                    <label class="form-label" name="vodici">Vodici:</label><br>
+                    <select name="role" class="form-control" id="vodici" multiple>
+                        <option value="">--Odaberi vodica--</option>
+                        {{#each vodici}}
+                        <option value="{{this.id}}">{{this.korisnickoIme}}-{{this.ime}} {{this.prezime}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="form-label" name="kljucneRijeci">Kljucne rijeci:</label><br>
+                    <input class="form-control" type="text" placeholder="npr. Bihac, Cazin, planina, ..." value=""
+                        name="kljucneRijeci" id="kljucneRijeci" /><br>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="form-sign-btn btn btn-primary " type="submit">KREIRAJ</button><br>
+
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module" src="/js/kreiranjePonude.js"></script>
+
+    {{>footer}}
+
+
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+
+</html>

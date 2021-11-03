@@ -1,0 +1,149 @@
+<header>
+    <!-- <nav class="navbar navbar-fixed-top ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">TurisT</a>
+            </div>
+            <div class="container">
+
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav pull-right">
+                        <li><a value="" href="/">Pocetna</a></li>
+                        <li><a value="ponude" href="/ponude">Ponude</a></li>
+                        <li><a value="oglasi" class="active" href="/oglasi">Oglasi</a></li>
+
+                        {{#ifDoubleEquals status "zaposlenik" "admin"}}
+                        <li><a value="korisnici" class="active" href="/korisnici">Korisnici</a></li>
+                        <li><a value="rezervacije" href="/rezervacije">Rezervacije</a></li>
+                        {{/ifDoubleEquals}}
+
+                        {{#ifNotEquals status "none"}}
+                        <li><a href="/rezervacije/mojeRezervacije">PersonalRezervacije</a></li>
+                        <li value="mojProfil"><a value="mojProfil" href="/mojProfil">Profil</a></li>
+                        {{/ifNotEquals}}
+
+                        {{#ifEquals status "admin"}}
+                        <li><a href="/statistika">Statistika</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true" aria-expanded="false">ADMIN <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/ponude/kreiranje">kreirajPonudu</a></li>
+                                <li><a href="/oglasi/kreiranje">kreirajOglasa</a></li>
+                                <li><a href="/chatAdmin">LiveChat</a></li>
+
+                            </ul>
+                        </li>
+                        {{/ifEquals}}
+
+
+
+                        {{#ifEquals status "none"}}
+                        <li><a href="/registracija">Registracija</a></li>
+                        <li><a href="/prijava">Prijava</a></li>
+                        {{/ifEquals}}
+
+                        {{#ifNotEquals status "none"}}
+                        <li><a href="/odjava">Odjava</a></li>
+                        {{/ifNotEquals}}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    -->
+
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">TurisT</a>
+                <button type="button" class="navbar-toggle" style="padding-bottom: 20px;" data-toggle="collapse"
+                    data-target="#navbarSupportedContent">
+                    <span class="icon-bar"><i class="fa fa-bars fa-2x"></i></span>
+                </button>
+            </div>
+
+
+            <div class="collapse navbar-collapse minHeight"
+                style=" overflow:hidden; margin-right: 15px; max-height: 500px;" id="navbarSupportedContent">
+                <ul class="nav navbar-nav pull-right" id="navbar-links">
+                    <li class="active"><a value="" href="/" class="active">Pocetna</a></li>
+                    <li><a value="ponude" href="/ponude">Ponude</a></li>
+                    <li><a value="oglasi" href="/oglasi">Oglasi</a></li>
+
+                    {{#ifDoubleEquals status "zaposlenik" "admin"}}
+                    <li><a value="korisnici" class="active" href="/korisnici">Korisnici</a></li>
+                    <li><a value="rezervacije" href="/rezervacije">Rezervacije</a></li>
+                    {{/ifDoubleEquals}}
+
+                    {{#ifNotEquals status "none"}}
+                    <li><a value="mojeRezervacije" href="/rezervacije/mojeRezervacije">PersonalRezervacije</a></li>
+                    <li value="mojProfil"><a value="mojProfil" href="/mojProfil">Profil</a></li>
+                    {{/ifNotEquals}}
+
+                    {{#ifEquals status "admin"}}
+                    <li><a value="statistika" href="/statistika">Statistika</a></li>
+                    <li class="nav-item dropdown" id="admin-links">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">ADMIN <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/ponude/kreiranje">kreirajPonudu</a></li>
+                            <li><a href="/oglasi/kreiranje">kreirajOglas</a></li>
+                            <li><a href="/chatAdmin">chatSoba</a></li>
+
+                        </ul>
+                    </li>
+                    {{/ifEquals}}
+
+
+
+                    {{#ifEquals status "none"}}
+                    <li><a href="/registracija">Registracija</a></li>
+                    <li><a href="/prijava">Prijava</a></li>
+                    {{/ifEquals}}
+
+                    {{#ifNotEquals status "none"}}
+                    <li><a href="/odjava">Odjava</a></li><br><br>
+                    {{/ifNotEquals}}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+</header>
+
+<!-- Podešavanje alignemnta headera u ovisnosti od velicine ekrana, centriranje za manje uređaje-->
+<script>
+    $('.dropdown-toggle').dropdown();
+
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+
+    });
+    if ($(this).width() < 744) {
+        $('#navbar-links').removeClass('pull-right').addClass('text-center')
+    }
+    else {
+        $('#navbar-links').removeClass('text-center').addClass('pull-right')
+    }
+    $('#live-chat').css("left", (($(this).width() - 300) / $(this).width()) * 100 + "%");
+
+
+    $(window).bind("resize", function () {
+
+        if ($(this).width() < 744) {
+            $('#navbar-links').removeClass('pull-right').addClass('text-center')
+        }
+        else {
+            $('#navbar-links').removeClass('text-center').addClass('pull-right')
+        }
+        $('#live-chat').css("left", ($(this).width() - 300) / $(this).width() * 100 + "%");
+    })
+</script>

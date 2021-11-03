@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <title>Moj Profil</title>
+    {{>links}}
+</head>
+
+<body>
+    {{>header}}
+
+    <div id="login-message"></div>
+
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(20).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+    <div class="container moj-profil">
+        <div class="row">
+            <div class="col-md-4 naslov">
+                <br>
+                <h1>Moj profil</h1>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12 profil-slika text-center">
+                <img class="" src="/img/korisnici/{{korisnik.fotografija}}" id="userImage"><br>
+
+            </div>
+        </div>
+
+
+        <form method="POST" action="" id="updateDataForm" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" name="firstname">Ime:</label><br>
+                    <input class="form-control" type="text" value={{korisnik.ime}} name="firstname" required="required"
+                        id="update-firstname" /><br>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" name="lastname">Prezime:</label><br>
+                    <input class="form-control" type="text" value={{korisnik.prezime}} name="lastname"
+                        required="required" id="update-lastname" /><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" name="username">Korisnicko ime:</label><br>
+                    <input class="form-control" type="text" value={{korisnik.korisnickoIme}} name="username"
+                        required="required" id="update-username" /><br>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" name="email">E-mail:</label><br>
+                    <input class="form-control" type="email" value={{korisnik.email}} name="email" required="required"
+                        id="update-email" /><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 ">
+                    <label name="photo" for="photo"> Promijenite profilnu sliku: </label><br />
+                    <input type="file" accept="image/*" name="photo" id="update-photo" /><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="form-sign-btn btn btn-primary" type="submit">SPREMI</button><br>
+                </div>
+            </div>
+
+        </form>
+
+        <br>
+        <form method="POST" action="" id="updatePasswordForm" autocomplete="off">
+
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <label class="form-label" name="password">Stara sifra:</label><br>
+                    <input class="form-control" minlength="8" type="password" placeholder="Unesi sifru" value=""
+                        name="oldPassword" id="old-password" /> <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <label class="form-label" name="password">Nova Sifra:</label><br>
+                    <input class="form-control" minlength="8" type="password" placeholder="Unesi sifru" value=""
+                        name="newPassword" id="update-password" /> <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <label class="form-label" name="passwordConfirm">Ponovite novu sifru:</label><br>
+                    <input class="form-control" minlength="8" type="password" placeholder="Unesi sifru" value=""
+                        name="newPasswordConfirm" id="update-passwordConfirm" /> <br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="form-sign-btn btn btn-primary" type="submit">SPREMI</button><br>
+
+                </div>
+            </div>
+
+
+
+
+
+        </form>
+    </div>
+
+
+    {{>footer}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script type="module" src="/js/updateProfile.js"></script>
+
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+</html>

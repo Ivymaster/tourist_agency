@@ -1,0 +1,296 @@
+<html>
+
+<head>
+
+    {{>links}}
+    <title>Rezervacije | Tourist</title>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+</head>
+
+<body>
+
+    <!-- PRELOADER: HTML i SKRIPTA-->
+    <div id="preloader">
+        <div id="animacija">
+        </div>
+    </div>
+    <script>
+        $(window).on("load", () => {
+            $("#animacija").delay(30).fadeOut();
+            $("#preloader").delay(100).fadeOut();
+        })
+    </script>
+
+
+    {{>header}}
+    <div id="login-message"></div>
+
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-md-4 naslov">
+                <h1>Zarada</h1>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <form id="dateFormFilter" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-3">
+                            <br>
+                            <label>Od:</label>
+                            <input id="pocetniDatum-FilterForma" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <br>
+                            <label>Do:</label>
+                            <input id="krajnjiDatum-FilterForma" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <br><br>
+                            <button type="submit" class="btn btn-primary">Pretrazi</button>
+
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12  ">
+                <!-- Chart Placement[2] -->
+                <div id="zaradaPoMjesecima"></div>
+                <div id="data" data-value="{{rezervacije}}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12  ">
+                <!-- Chart Placement[2] -->
+                <div id='zaradaMjeseci'></div>
+                <div id="data3" data-value="{{rezervacije2}}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12  ">
+                <!-- Chart Placement[2] -->
+                <div id='zaradaPoPonudama'></div>
+                <div id="data2" data-value="{{ponudeZarada}}"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(
+            function () {
+                const data = $("#data").data("value");
+                const data2 = $("#data2").data("value");
+                const data3 = $("#data3").data("value");
+
+                const valuesDaniZarada = data.map((el) => {
+                    return [el.datumPlacanja.split("T")[0], el.zarada]
+                });
+                const valuesDaniKarte = data.map((el2) => {
+                    return [el2.datumPlacanja.split("T")[0], el2.brojRezervacija]
+                });
+
+                const valuesPonudeZarada = data2.map((el) => {
+                    return {
+                        values: [el.zarada],
+                        text: el.inventory_docs[0].naziv,
+                        backgroundColor: '#50ADF5',
+                    }
+                });
+
+                const valuesMjeseciZarada = data3.map((el) => {
+                    return [`${el.datumPlacanja.split("T")[0].substr(0, 7)}`, el.zarada]
+                });
+                const valuesMjeseciKarte = data3.map((el2) => {
+                    return [`${el2.datumPlacanja.split("T")[0].substr(0, 7)}`, el2.brojRezervacija]
+                });
+                const zaradaPoMjesecimaConfig = {
+                    type: "bar",
+                    /*"plot": { //global changes to all series
+                        "alpha": 0.7,
+                        "border-width": 10,
+                        "border-color": "black",
+                        "border-radius-top-left": 5,
+                        "border-radius-top-right": 5,
+                        "hoverState": {
+                            "backgroundColor": "#909090"
+                        }
+                    },*/
+                    scaleX: {
+                        transform: {
+                            type: 'date',
+                            all: '%y/%m/%d'
+                        },
+                        label: {
+                            text: 'Datum',
+                            fontColor: '#4F772D',
+                            fontFamily: 'Georgia',
+                            fontSize: 16,
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            padding: '5px 20px'
+                        }
+                    },
+                    scaleY: {
+                        transform: {
+                            type: 'number',
+                        },
+                        label: {
+                            text: 'Zarada',
+                            fontColor: '#4F772D',
+                            fontFamily: 'Georgia',
+                            fontSize: 16,
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            padding: '5px 20px'
+                        }
+                    },
+                    title: {
+                        fontColor: "grey",
+                        text: 'Po Danima',
+                        align: "left",
+                        offsetX: 10,
+                        fontFamily: "Open Sans",
+                        fontSize: 25
+                    },
+                    series: [
+                        {
+                            values: valuesDaniZarada
+                        }, {
+                            values: valuesDaniKarte
+                        }
+                    ]
+                };
+
+                var zaradaPoPonudama = {
+                    type: "pie",
+                    plot: {
+                        borderColor: "#2B313B",
+                        borderWidth: 5,
+                        // slice: 90,
+                        valueBox: {
+                            placement: 'out',
+                            text: '%t\n%npv%',
+                            fontFamily: "Open Sans"
+                        },
+                        tooltip: {
+                            fontSize: '18',
+                            fontFamily: "Open Sans",
+                            padding: "5 10",
+                            text: "%npv%"
+                        },
+
+                    },
+                    title: {
+                        fontColor: "grey",
+                        text: 'Po Ponudama',
+                        align: "left",
+                        offsetX: 10,
+                        fontFamily: "Open Sans",
+                        fontSize: 25
+                    },
+                    series: valuesPonudeZarada
+                };
+
+                var zaradaMjesecna = {
+                    type: "line",
+                    "plot": { //global changes to all series
+                        "alpha": 0.7,
+                        "border-width": 10,
+                        "border-color": "black",
+                        "border-radius-top-left": 5,
+                        "border-radius-top-right": 5,
+                        "hoverState": {
+                            "backgroundColor": "#909090"
+                        }
+                    },
+                    scaleX: {
+                        transform: {
+                            type: 'date',
+                            all: '%y/%m'
+                        },
+                        label: {
+                            text: 'Datum',
+                            fontColor: '#4F772D',
+                            fontFamily: 'Georgia',
+                            fontSize: 16,
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            padding: '5px 20px'
+                        }
+                    },
+                    scaleY: {
+                        transform: {
+                            type: 'number',
+                        },
+                        label: {
+                            text: 'Zarada',
+                            fontColor: '#4F772D',
+                            fontFamily: 'Georgia',
+                            fontSize: 16,
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            padding: '5px 20px'
+                        }
+                    }, title: {
+                        fontColor: "grey",
+                        text: 'Po Mjesecima',
+                        align: "left",
+                        offsetX: 10,
+                        fontFamily: "Open Sans",
+                        fontSize: 25
+                    },
+                    series: [{
+                        values: valuesMjeseciZarada,
+
+                    },
+                    {
+                        values: valuesMjeseciKarte
+                    }],
+
+                };
+                zingchart.render({
+                    id: 'zaradaPoMjesecima',
+                    data: zaradaPoMjesecimaConfig,
+                    height: 400
+                });
+                zingchart.render({
+                    id: 'zaradaPoPonudama',
+                    data: zaradaPoPonudama,
+                    height: 400
+                });
+                zingchart.render({
+                    id: 'zaradaMjeseci',
+                    data: zaradaMjesecna,
+                    height: 400
+                });
+            }
+        );
+
+
+    </script>
+
+    {{>footer}}
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script type="module" src="/js/prikazStatistike.js"></script>
+
+
+    <input id="status-usera" value="{{status}}" style="display: none;">
+    <div id="foo" style="display: none;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.1/socket.io.js"
+        integrity="sha512-AcZyhRP/tbAEsXCCGlziPun5iFvcSUpEz2jKkx0blkYKbxU81F+iq8FURwPn1sYFeksJ+sDDrI5XujsqSobWdQ=="
+        crossorigin="anonymous"></script>
+    <script type="module" src="/js/liveChatAdmin.js"></script>
+</body>
+
+</html>
