@@ -1,8 +1,5 @@
-//3-party moduli
+/** 3-PARTY MODULES */
 const express = require('express');
-const path = require('path');
-const http = require("http"); //uvpđenje modula za kreiranje http servera
-
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -11,16 +8,18 @@ const hpp = require('hpp');
 const xss = require('xss-clean');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const hbs = require('hbs');
+let helpers = require('handlebars-helpers')();
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const hbs = require('hbs');
-const socketio = require("socket.io"); // uvođenje modula za kreiranje webSocket veze
-var helpers = require('handlebars-helpers')();
 
-const app = express();
- //Developer moduli
- const AppError = require('./utils/appError');
- const chatUzivo = require('./utils/socket');
+/** INBUILT MODULES */
+const path = require('path');
+const http = require("http");  
+
+/** PERSONAL MODULES */
+const AppError = require('./utils/appError');
+const chatUzivo = require('./utils/socket');
 const globalErrorHandler = require('./controllers/errorController');
 const korisnikAPIRouter = require('./routes/korisnikAPIRoutes');
 const korisnikRouter = require('./routes/korisnikRoutes');
@@ -34,19 +33,20 @@ const rezervacijaController = require('./controllers/rezervacijaController');
 const generalniController = require('./controllers/generalniController');
 const authentifikacijskiController = require('./controllers/authentifikacijskiController');
 
+const app = express();
+
 const Oglas = require('./models/oglasModel');
 const catchAsync = require('./utils/catchAsync');
 
-//Kreiranje putanja za public folder, i "poglede"
-const putanjaPublicDirektorija = path.join(__dirname, './public');
-const viewsPutanja = path.join(__dirname, './views');
-const partialsPutanja = path.join(__dirname, './views/partials');
-
-UV_THREADPOOL_SIZE=8;
-//postavke za HANDLEBARS
+//Defining paths for public directories, and views 
+const publicDirectoryPath = path.join(__dirname, './public');
+const viewsPath = path.join(__dirname, './views');
+const partialsPath = path.join(__dirname, './views/partials');
+ 
+/** HANDLEBARS TL SETTINGS */ 
 app.set('view engine', 'hbs');
-app.set('views', viewsPutanja);
-hbs.registerPartials(partialsPutanja);
+app.set('views', viewsPath);
+hbs.registerPartials(partialsPath);
 hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
   return arg1 == arg2 ? options.fn(this) : options.inverse(this);
 });
@@ -110,46 +110,91 @@ hbs.registerHelper('datumPonudeNaPrikazuPonuda', function(datumi) {
   }
   return new hbs.SafeString(datumi[datumi.length-1]);
 }); 
-// Stripe webhook, isti se postavlja prije parsiranja dolaznih podataka, jer zahtjeva raw formu
+/** END - HANDLEBARS TL SETTINGS */ 
+
+/** STRIPE WEBHOOK */ 
 app.post(
   '/webhook-naplata',
   bodyParser.raw({ inflate: true, type: '*/*' }),
   rezervacijaController.webhookNaplata
 );
+/** END - STRIPE WEBHOOK */ 
 
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 
+/** GENERAL MIDDLEWARES */
+// Midd. for serving static files
+app.use(express.static(publicDirectoryPath));
 
-
-// Middleware za posluzivanje staticnih datoteka
-app.use(express.static(putanjaPublicDirektorija));
-
-// Middleware za postavljanje sigurnosnih HTTP zaglavlja (headera)
+// Midd. for setting up secure http headers
 app.use(helmet());
 
-// Middleware za omogućavanje CORS-a
+// Midd. for CORS 
 app.use(cors());
 
-// Middleware za logiranje događaja tokom razvoja
+// Midd. for event loggin
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Middleware za ograničavanje broja zahtjeva sa određene IP adrese
+// Midd. for rate limiting, from the same IP address
 const limiter = rateLimit({
   max: 200,
   windowMs: 60 * 60 * 1000,
-  message: 'Previse zahtjeva, pokušajte kasnije!'
+  message: 'Request limit reached, try again later!'
 });
 app.use('/', limiter);
 
-// Middleware za konverziju podataka iz body u req.body
-// Onemogućavanje paketa većih od 10 kB
+// Midd. for limitting the packed size to 10KB
 app.use(express.json({ limit: '10kb' }));
+
+// Midd. for conversion the data from body, to req.body
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
+// Midd. for data sanitisation, against NoSQL injection
+app.use(mongoSanitize());
 
-// Download route, za skidanje dokumenata, poput onih za oglase
+// Midd. for sanitisation against CRoS SITE SCRIPTIONG
+app.use(xss());
+
+// Midd. for disabling paramtere polution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price'
+    ]
+  })
+);
+
+// Midd. for JSON and HTML compression
+app.use(compression());
+
+//Midd. for auth check
+app.use(authentifikacijskiController.provjeraPrijavljenosti);
+/** END - GENERAL MIDDLEWARES */
+
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/** ROUTES */    
+app.use('/podatci/korisnici', korisnikAPIRouter);
+app.use('/korisnici', korisnikRouter);
+app.use('/ponude', ponudaRouter);
+app.use('/oglasi', oglasRouter);
+app.use('/recenzije', recenzijaRouter);
+app.use('/rezervacije', rezervacijaRouter);
+app.use('/statistika', statistikaRouter);
+app.use('/', generalniRouter);
+
+
+// Download routes
 app.get(
   '/preuzimanjeSpecificneDatoteke/:fileName/:oglasId',
   authentifikacijskiController.provjeraPrijavljenosti,
@@ -157,7 +202,7 @@ app.get(
   catchAsync(async(req,res,next)=>{
     const oglas = await Oglas.findById(req.params.oglasId);
      if(oglas.zaposlenik.includes(req.user.id) || req.status=="admin"){
-      let a = putanjaPublicDirektorija + "/dokumenti/oglasi/" + req.params.fileName; 
+      let a = publicDirectoryPath + "/dokumenti/oglasi/" + req.params.fileName; 
       res.download(a); 
     }else{
       return next(new AppError("Zastićeni podatci, ne pokušavajte pristupiti"));
@@ -172,80 +217,23 @@ app.get(
     if(req.user.uloga!="zaposlenik" &&  req.user.uloga!="admin"){
      return next(new AppError("Zastićeni podatci, ne pokušavajte pristupiti"));
     }
-     let a = putanjaPublicDirektorija + "/dokumenti/oglasi/" + req.params.fileName; 
+     let a = publicDirectoryPath + "/dokumenti/oglasi/" + req.params.fileName; 
     res.download(a); 
    }
-);
-
+); 
 app.get(
   '/preuzimanjeJavneDatoteke/:fileName',
   (req,res)=>{
-    let a = putanjaPublicDirektorija + "/dokumenti/oglasi/" + req.params.fileName; 
+    let a = publicDirectoryPath + "/dokumenti/oglasi/" + req.params.fileName; 
     res.download(a); 
    }
 );
-
-
-// Middleware za sanitizaciju podataka protiv NoSQL query ubacivanja
-app.use(mongoSanitize());
-
-// Middleware za sanitizaciju podataka protiv XSS - "Cross site scripting"
-// Maliciozni HTML kod
-app.use(xss());
-
-// Middleware za specavanje polucije parametara
-app.use(
-  hpp({
-    whitelist: [
-      'duration',
-      'ratingsQuantity',
-      'ratingsAverage',
-      'maxGroupSize',
-      'difficulty',
-      'price'
-    ]
-  })
-);
-
-// Middleware za kompresiju JSON i HTML odgovora
-app.use(compression());
- 
-
-//Middleware za provjeru prijavljanosti korisnika, pri svakom zahtjevu
-app.use(authentifikacijskiController.provjeraPrijavljenosti);
-
-///////////////////////////////////////
-/////// RUTE /////////////////////////
-// Live chat - admin
- 
-   
-app.use('/podatci/korisnici', korisnikAPIRouter);
-app.use('/korisnici', korisnikRouter);
-app.use('/ponude', ponudaRouter);
-app.use('/oglasi', oglasRouter);
-app.use('/recenzije', recenzijaRouter);
-app.use('/rezervacije', rezervacijaRouter);
-app.use('/statistika', statistikaRouter);
-app.use('/', generalniRouter);
-
-
-// Rukovatelj za nedeklarirane rute
-//app.all('*', (req, res, next) => {
- // next(new AppError(`Nemoguce pronaci ${req.originalUrl} putanju!`, 404));
-//});
+/** END - ROUTES */    
 
 // Middleware za rukovanje nastalim greškama
 app.use(globalErrorHandler);
 
-var time = process.hrtime();
-process.nextTick(function() {
-   var diff = process.hrtime(time);
-
-
-   console.log('benchmark took %d nanoseconds', diff[0] * 1e9 + diff[1]);
-   // benchmark took 1000000527 nanoseconds
-});
 
 module.exports = {
-  app,
+  app
 };

@@ -1,40 +1,40 @@
 const {
-    generateMessage,
-    generateLocationMessage,
-  } = require("./socketPoruke");
-  const {
-    addUser,
-    removeUser,
-    getUser,
-    getAllUsers,
-    getUsersInRoom,
-  } = require("./socketKorisnici");
-  
-  
+  generateMessage,
+  generateLocationMessage,
+} = require("./socketMessages");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getAllUsers,
+  getUsersInRoom,
+} = require("./socketUsers");
+
 module.exports = class chatUzivo {
+  constructor(io, req) {
+    io.on("connection", (socket) => {
+      //osluškivanje za prisustvo nove konekcije na Socket.io
 
-    constructor(io, req) {
-        io.on("connection", (socket) => {
-            //osluškivanje za prisustvo nove konekcije na Socket.io
-          
-            socket.on("join", (locString, callback) => {
-              addUser(socket.id, req.user.korisnickoIme)
-              if(req.user.status=="admin"){
+      socket.on("join", (locString, callback) => {
+        addUser(socket.id, req.user.korisnickoIme);
+        if (req.user.status == "admin") {
+        }
 
-              }
-          
-              socket.join(req.user.korisnickoIme); //kreiranje sobe, specificirane od strane korisnika
-          
-              socket.emit("message", generateMessage("Admin", "Welcome!"));
-              socket.broadcast
-                .to(req.user.korisnickoIme)
-                .emit("message", generateMessage("Admin", req.user.korisnickoIme + " joined")); // slanje događaja tipa "broadcast"
-              io.to(req.user.korisnickoIme).emit("PodatciSobe", {
-                rooms: getAllUsers(),
-                users: getUsersInRoom(user.room),
-              });
-            });
-   /*       
+        socket.join(req.user.korisnickoIme); //kreiranje sobe, specificirane od strane korisnika
+
+        socket.emit("message", generateMessage("Admin", "Welcome!"));
+        socket.broadcast
+          .to(req.user.korisnickoIme)
+          .emit(
+            "message",
+            generateMessage("Admin", req.user.korisnickoIme + " joined")
+          ); // slanje događaja tipa "broadcast"
+        io.to(req.user.korisnickoIme).emit("PodatciSobe", {
+          rooms: getAllUsers(),
+          users: getUsersInRoom(user.room),
+        });
+      });
+      /*       
             socket.on("clientMessage", (message) => {
               // primanje klijentove poruke
               const user = getUser(socket.id);
@@ -57,22 +57,21 @@ module.exports = class chatUzivo {
               ); //Krerianje poveznice sa primljenim podacima
               callback(); // pozivanje callback fje
             });
-   */       
-            socket.on("disconnect", () => {
-              // događaj pri prekidanju povezanosti
-              const user = removeUser(socket.id);
-              if (user) {
-                io.to(user.room).emit(
-                  "message",
-                  generateMessage("Admin", user.username + " disconnected")
-                );
-                io.to(user.room).emit("roomData", {
-                  room: user.room,
-                  users: getUsersInRoom(user.room),
-                });
-              }
-            });
+   */
+      socket.on("disconnect", () => {
+        // događaj pri prekidanju povezanosti
+        const user = removeUser(socket.id);
+        if (user) {
+          io.to(user.room).emit(
+            "message",
+            generateMessage("Admin", user.username + " disconnected")
+          );
+          io.to(user.room).emit("roomData", {
+            room: user.room,
+            users: getUsersInRoom(user.room),
           });
-      }
-    
-} 
+        }
+      });
+    });
+  }
+};

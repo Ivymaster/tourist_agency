@@ -1,9 +1,14 @@
+/** 3-PARTY MODULES */
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const socketio = require("socket.io"); // uvođenje modula za kreiranje webSocket veze
-const { app } = require("./app");
-let korisnici = [];
-const { generateMessage } = require("./utils/socketPoruke");
+const socketio = require("socket.io");  
+
+/** INBUILT MODULES */
+const pathBuilder = require('path');
+
+/** PERSONAL MODULES */
+const expressApp = require("./app"); 
+const { generateMessage } = require("./utils/socketMessages");
 const {
   addUser,
   removeUser,
@@ -11,22 +16,28 @@ const {
   getAllUsers,
   addMessageToRoom,
   addZaposleniciToUser,
-} = require("./utils/socketKorisnici");
+} = require("./utils/socketUsers");
 
-// Za izuzetke koji nosu nastali unutar Express aplikacije, proces emituje dogadjaj "unhandledRejection"
+dotenv.config({ path: pathBuilder.join(__dirname, "../config.env") });
 
-process.on("uncaughtException", (err) => {
-  console.log("NEUHVACEN IZUZETAK!  Gasenje aplikacije...");
+/** UNCAUGHT EXCEPTION HANDLING */
+process.on("uncaughtException", (err:Error) => {
+  // NodeJS emits this event, if a uncaught exception took place
+  console.log("UNCAUGHT EXCEPTION!  Shutting down the app..."); 
   console.log(err.name, err.message);
-  process.exit(1); // Naglo gasenje aplikacije, jer je ista u necistom stanju
+  process.exit(1);  
 });
+/** END - UNCAUGHT EXCEPTION HANDLING */
 
-dotenv.config({ path: "../config.env" });
+/*
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
+*/
 
+/** MONGODB CONNECTION */
+const DB = process.env.DATABASE;
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
@@ -35,22 +46,28 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("Uspostavljena konekcija sa bazom podataka!"));
+/** END - MONGODB CONNECTION */
 
+/** SERVER SPINUP */
 const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
+const server = expressApp.app.listen(port, () => {
   console.log(`Aplikacija je pokrenuta na portu ${port}...`);
 });
+ 
 
-// Za odbitke koji nosu nastali unutar Express aplikacije, proces emituje dogadjaj "unhandledRejection"
-process.on("unhandledRejection", (err) => {
-  console.log("NEUHVACEN ODBITAK!  Gasenje aplikacije...");
-  console.log(err.name, err.message);
-  // Graciozno gašenje servera, nije naglo gasenje
+/** UNHANDLED REJECTION HANDLING */
+process.on("unhandledRejection", (err:Error) => {
+  // Rejections are the errors that happend outside the app (eg. connection to the DB)
+  console.log("UNHANDLED REJECTION!  Shutting down the app...");
+  console.log(err.name, err.message); 
   server.close(() => {
     process.exit(1);
   });
 });
+/** END - UNHANDLED REJECTION HANDLING */
 
+
+/** REAL TIME CHAT APP SECTION */
 const io = socketio(server, {
   pingTimeout: 100000,
 }); //povezivanje socket.io sa serverom
@@ -168,3 +185,4 @@ io.on("connection", (socket) => {
     }
   });
 });
+/** END - REAL TIME CHAT APP SECTION */
