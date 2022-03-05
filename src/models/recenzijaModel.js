@@ -1,97 +1,95 @@
 // review / rating / createdAt / ref to tour / ref to user
-const mongoose = require('mongoose');
-const Ponuda = require('./ponudaModel');
+const mongoose = require("mongoose");
+const Ponuda = require("./ponudaModel");
 
 const recenzijaSchema = new mongoose.Schema(
   {
     komentar: {
       type: String,
-      required: [true, 'Recenzija mora imati komentar!']
+      required: [true, "Recenzija mora imati komentar!"],
     },
     ocjena: {
       type: Number,
       min: 1,
-      max: 5
+      max: 5,
     },
     datumKreacije: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     ponuda: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Ponuda',
-      required: [true, 'Recenzija mora odgovarati određenoj ponudi.']
+      ref: "Ponuda",
+      required: [true, "Recenzija mora odgovarati određenoj ponudi."],
     },
     rezervacija: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Rezervacija',
-        required: [true, 'Recenzija mora odgovarati određenoj rezervaciji']
-      },
+      type: mongoose.Schema.ObjectId,
+      ref: "Rezervacija",
+      required: [true, "Recenzija mora odgovarati određenoj rezervaciji"],
+    },
     korisnik: {
       type: mongoose.Schema.ObjectId,
-      ref: 'Korisnik',
-      required: [true, 'Recenzija mora odgovarati određenom korisniku.']
-    }
+      ref: "User",
+      required: [true, "Recenzija mora odgovarati određenom korisniku."],
+    },
   },
   {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
   }
 );
 
-
-recenzijaSchema.statics.dobivanjeNoveOcjenePonude = async function(ponudaId) {
+recenzijaSchema.statics.dobivanjeNoveOcjenePonude = async function (ponudaId) {
   const stats = await this.aggregate([
     {
-      $match: { ponuda: ponudaId }
+      $match: { ponuda: ponudaId },
     },
     {
       $group: {
-        _id: '$ponuda',
+        _id: "$ponuda",
         brojRecenzija: { $sum: 1 },
-        prosjecnaOcjenaRecenzija: { $avg: '$ocjena' }
-      }
-    }
+        prosjecnaOcjenaRecenzija: { $avg: "$ocjena" },
+      },
+    },
   ]);
- 
+
   if (stats.length > 0) {
     await Ponuda.findByIdAndUpdate(ponudaId, {
       brojRecenzija: stats[0].brojRecenzija,
-      ocjena: stats[0].prosjecnaOcjenaRecenzija
+      ocjena: stats[0].prosjecnaOcjenaRecenzija,
     });
   } else {
     await Ponuda.findByIdAndUpdate(ponudaId, {
       brojRecenzija: 0,
-      ocjena: 4
+      ocjena: 4,
     });
   }
 };
 
-recenzijaSchema.post('save', function() {
-   this.constructor.dobivanjeNoveOcjenePonude(this.ponuda);
+recenzijaSchema.post("save", function () {
+  this.constructor.dobivanjeNoveOcjenePonude(this.ponuda);
 });
 
 // findByIdAndUpdate
 // findByIdAndDelete
-recenzijaSchema.pre(/^findOneAnd/, async function(next) {
+recenzijaSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
-   next();
+  next();
 });
 
-recenzijaSchema.post(/^findOneAnd/, async function() {
-   await this.r.constructor.dobivanjeNoveOcjenePonude(this.r.ponuda);
+recenzijaSchema.post(/^findOneAnd/, async function () {
+  await this.r.constructor.dobivanjeNoveOcjenePonude(this.r.ponuda);
 });
 /*
 recenzijaSchema.index({ tour: 1, user: 1 }, { unique: true });
 */
-recenzijaSchema.pre(/^find/, function(next) {
-   this.populate({
-     path: 'korisnik',
-     select: 'korisnickoIme fotografija'
-   });
-   next();
-
+recenzijaSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "korisnik",
+    select: "korisnickoIme fotografija",
   });
+  next();
+});
 /*
   this.populate({
     path: 'user',
@@ -146,6 +144,6 @@ reviewSchema.post(/^findOneAnd/, async function() {
   await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 */
-const Recenzija = mongoose.model('Recenzija', recenzijaSchema);
+const Recenzija = mongoose.model("Recenzija", recenzijaSchema);
 
 module.exports = Recenzija;

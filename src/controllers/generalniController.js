@@ -1,4 +1,4 @@
-const Korisnik = require("../models/korisnikModel");
+const User = require("../models/User");
 const Recenzija = require("../models/recenzijaModel");
 const Ponuda = require("../models/ponudaModel");
 const catchAsync = require("../utils/catchAsync");
@@ -9,8 +9,8 @@ exports.getPocetna = catchAsync(async (req, res, next) => {
   const brojPonuda = await Ponuda.count(
     Ponuda.find({ status: "aktivno" }).select("_id")
   );
-  const brojKorisnika = await Korisnik.count(
-    Korisnik.find({ uloga: "turist" }).select("_id")
+  const brojKorisnika = await User.count(
+    User.find({ uloga: "turist" }).select("_id")
   );
   const brojRecenzija = await Recenzija.count(
     Recenzija.find({ ocjena: 5 }).select("_id")
@@ -27,7 +27,7 @@ exports.getPocetna = catchAsync(async (req, res, next) => {
   const najboljePonude = await Ponuda.find({ status: "aktivno" })
     .sort({ ocjena: -1 })
     .limit(3);
-  const zaposlenici = await Korisnik.find({ uloga: { $ne: "turist" } });
+  const zaposlenici = await User.find({ uloga: { $ne: "turist" } });
   res.status(200).render("index", {
     brojke,
     najnovijaPonuda: najnovijaPonuda[0],
@@ -40,23 +40,29 @@ exports.getPocetna = catchAsync(async (req, res, next) => {
 
 exports.register = catchAsync(async (req, res, next) => {
   if (req.cookies.jwt) {
-    return next(new AppError("Vec ste prijavljeni!", 400));
+    return next(new AppError("You are already registered!", 400));
   }
   res.status(200).render("auth/register", {
     status: req.status,
   });
 });
 
-exports.getPrijavnaForma = (req, res) => {
-  res.status(200).render("login", {
+exports.login = (req, res) => {
+  res.status(200).render("auth/login", {
     status: req.status,
   });
 };
-
+exports.logout = (req, res, next) => {
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 1 * 1000),
+    httpOnly: true,
+  });
+  res.redirect("/");
+};
 /////// API ///////////////////////////////////////////////////////////
 
 exports.updateKorisnickiPodatci = catchAsync(async (req, res, next) => {
-  const azuriraniKorsnik = await Korisnik.findByIdAndUpdate(
+  const azuriraniKorsnik = await User.findByIdAndUpdate(
     req.user.id,
     {
       ime: req.body.name,

@@ -1,6 +1,6 @@
 const express = require("express");
 const generalniController = require("../controllers/generalniController");
-const authentifikacijskiController = require("../controllers/authentifikacijskiController");
+const authController = require("../controllers/api/v2/authController");
 const korisnikController = require("../controllers/korisnikController");
 
 var Router = require("named-routes");
@@ -11,16 +11,13 @@ const router = express.Router();
 expandedRouter.extendExpress(router);
 
 router.get("/register", "register", generalniController.register);
-router.get("/prijava", generalniController.getPrijavnaForma);
-router.get("/login", (req, res) => {
-  res.redirect("/prijava");
-});
-router.get("/odjava", authentifikacijskiController.odjava);
+router.get("/login", generalniController.login);
+router.post("/logout", generalniController.logout);
 
 router.get(
   "/chatAdmin",
-  authentifikacijskiController.zastita,
-  authentifikacijskiController.onemogucavanjeZaUloge("admin"),
+  authController.zastita,
+  authController.onemogucavanjeZaUloge("admin"),
   (req, res) => {
     res.render("chatZaposlenik", {
       status: req.status,
@@ -30,7 +27,7 @@ router.get(
 
 router.get(
   "/mojProfil",
-  authentifikacijskiController.zastita,
+  authController.zastita,
   korisnikController.slanjeProfila
 );
 
@@ -45,7 +42,7 @@ router.post(
 router.post(
   "/submit-user-data",
   generalniController.podesavanjeUrlRadiPogresaka,
-  authentifikacijskiController.zastita,
+  authController.zastita,
   generalniController.updateKorisnickiPodatci
 );
 

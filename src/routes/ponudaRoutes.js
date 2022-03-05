@@ -1,39 +1,37 @@
-const express = require('express');
-const ponudaController = require('../controllers/ponudaController');
-const authentifikacijskiController = require('../controllers/authentifikacijskiController');
-const generalniController = require('../controllers/generalniController');
+const express = require("express");
+const ponudaController = require("../controllers/ponudaController");
+const authController = require("../controllers/api/v2/authController");
+const generalniController = require("../controllers/generalniController");
 
 const router = express.Router();
 
- 
-router.get('/pretraga',  
-    generalniController.podesavanjeUrlRadiPogresaka,
-     ponudaController.getPodudarnePonude
-    );
+router.get(
+  "/pretraga",
+  generalniController.podesavanjeUrlRadiPogresaka,
+  ponudaController.getPodudarnePonude
+);
 
+router.get(
+  "/kreiranje",
+  authController.zastita,
+  authController.onemogucavanjeZaUloge("admin"),
+  ponudaController.ponudaForma
+);
 
- router.get('/kreiranje', 
-    authentifikacijskiController.zastita, 
-    authentifikacijskiController.onemogucavanjeZaUloge('admin'), 
-    ponudaController.ponudaForma
-    );
- 
-router.get('/izmjena/:id', 
-    authentifikacijskiController.zastita, 
-    authentifikacijskiController.onemogucavanjeZaUloge('admin'), 
-     ponudaController.izmjenaPonudeForma
-    );
+router.get(
+  "/izmjena/:id",
+  authController.zastita,
+  authController.onemogucavanjeZaUloge("admin"),
+  ponudaController.izmjenaPonudeForma
+);
 
-
-  router
-  .route('/:id')
-  .get(
-     ponudaController.getJednuPonudu,
-   )
+router
+  .route("/:id")
+  .get(ponudaController.getJednuPonudu)
   .patch(
     generalniController.podesavanjeUrlRadiPogresaka,
-    authentifikacijskiController.zastita, 
-    authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+    authController.zastita,
+    authController.onemogucavanjeZaUloge("admin"),
     ponudaController.ucitavanjeSlikePonude,
     ponudaController.redimenzionisanjeSlikaPonude,
     ponudaController.parsiranjeNovePonude,
@@ -42,34 +40,30 @@ router.get('/izmjena/:id',
   )
   .put(
     generalniController.podesavanjeUrlRadiPogresaka,
-    authentifikacijskiController.zastita, 
-    authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+    authController.zastita,
+    authController.onemogucavanjeZaUloge("admin"),
     ponudaController.parsiranjePonudeZaVracanje,
     ponudaController.izmjenaPonude
   )
   .delete(
     generalniController.podesavanjeUrlRadiPogresaka,
-    authentifikacijskiController.zastita, 
-     authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+    authController.zastita,
+    authController.onemogucavanjeZaUloge("admin"),
     ponudaController.kreiranjePodatakaZaBrisanje,
     ponudaController.updatePonudu
   );
 
-  router
-  .route('/')
-  .get(
-     ponudaController.getSvePonude,
-   )
+router
+  .route("/")
+  .get(ponudaController.getSvePonude)
   .post(
     generalniController.podesavanjeUrlRadiPogresaka,
-    authentifikacijskiController.zastita, 
-    authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+    authController.zastita,
+    authController.onemogucavanjeZaUloge("admin"),
     ponudaController.parsiranjeNovePonude,
-    ponudaController.kreiranjePonude,
+    ponudaController.kreiranjePonude
   );
 
+/*   API tip povrata podataka */
 
-  /*   API tip povrata podataka */
-
-  
 module.exports = router;

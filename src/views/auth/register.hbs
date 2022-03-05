@@ -22,30 +22,30 @@
               <br><br><br>
               <div class="signupbox prijavna-forma">
 
-                     <form method="POST" action="" id="signUpForm" autocomplete="off" enctype="multipart/form-data">
+                     <form method="POST" action="" id="registerForm" autocomplete="off" enctype="multipart/form-data">
 
                             <div class="row">
                                    <div class="col-md-6">
-                                          <label class="form-label" name="firstname">Ime:</label><br>
+                                          <label class="form-label" name="firstName">Ime:</label><br>
                                           <input class="form-control" type="text" placeholder="Unesi ime" value=""
-                                                 name="firstname" id="signUp-firstname" /><br>
+                                                 name="firstName" id="firstName" /><br>
                                    </div>
                                    <div class="col-md-6">
-                                          <label class="form-label" name="lastname">Prezime:</label><br>
+                                          <label class="form-label" name="lastName">Prezime:</label><br>
                                           <input class="form-control" type="text" placeholder="Unesi prezime" value=""
-                                                 name="lastname" id="signUp-lastname" /><br>
+                                                 name="lastName" id="lastName" /><br>
                                    </div>
                             </div>
                             <div class="row">
                                    <div class="col-md-6">
-                                          <label class="form-label" name="username">Korisnicko ime:</label><br>
+                                          <label class="form-label" name="userName">Korisnicko ime:</label><br>
                                           <input class="form-control" type="text" placeholder="Unesi korisnicko ime"
-                                                 value="" name="username" id="signUp-username" /><br>
+                                                 value="" name="userName" id="userName" /><br>
                                    </div>
                                    <div class="col-md-6">
                                           <label class="form-label" name="email">E-mail:</label><br>
                                           <input class="form-control" type="email" placeholder="Unesi email" value=""
-                                                 name="email" id="signUp-email" /><br>
+                                                 name="email" id="email" /><br>
                                    </div>
                             </div>
 
@@ -54,13 +54,13 @@
                                           <label class="form-label" name="password">Sifra:</label><br>
                                           <input class="form-control" minlength="8" type="password"
                                                  placeholder="Unesi sifru" value="" name="password"
-                                                 id="signUp-password" /> <br>
+                                                 id="password" /> <br>
                                    </div>
                                    <div class="col-md-6">
                                           <label class="form-label" name="passwordConfirm">Sifra provjera:</label><br>
                                           <input class="form-control" minlength="8" type="password"
                                                  placeholder="Unesi sifru" value="" name="passwordConfirm"
-                                                 id="signUp-passwordConfirm" /> <br>
+                                                 id="passwordConfirm" /> <br>
                                    </div>
                             </div>
                             <div class="row">
@@ -75,10 +75,7 @@
               </div>
        </div>
 
-</body>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-       crossorigin="anonymous"></script>
-<script type="module" src="/js/signUp.js"></script>
+</body> 
+<script type="module" src="/js/auth/register.js"></script>
 
 </html>

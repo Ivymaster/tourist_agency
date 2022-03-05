@@ -1,48 +1,52 @@
-const express = require('express');
-const korisnikController = require('../controllers/korisnikController');
-const authentifikacijskiController = require('../controllers/authentifikacijskiController');
-const generalniController = require('../controllers/generalniController');
+const express = require("express");
+const korisnikController = require("../controllers/korisnikController");
+const authController = require("../controllers/api/v2/authController");
+const generalniController = require("../controllers/generalniController");
 
 const router = express.Router();
 
 // zastita all routes after this middleware
-router.use(authentifikacijskiController.zastita);
+router.use(authController.zastita);
 
 router.get(
-  '/brisanjeJednog/:id',
+  "/brisanjeJednog/:id",
   generalniController.podesavanjeUrlRadiPogresaka,
-  authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+  authController.onemogucavanjeZaUloge("admin"),
   korisnikController.deleteKorisnik
 );
 router.get(
-  '/vracanjeJednog/:id',
+  "/vracanjeJednog/:id",
   generalniController.podesavanjeUrlRadiPogresaka,
-  authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+  authController.onemogucavanjeZaUloge("admin"),
   korisnikController.vratiKorisnik
 );
 
 router.get(
-  '/zaposljavanjeJednog/:id',
+  "/zaposljavanjeJednog/:id",
   generalniController.podesavanjeUrlRadiPogresaka,
-  authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+  authController.onemogucavanjeZaUloge("admin"),
   korisnikController.zaposliKorisnika
 );
 
 router.get(
-  '/otpustanjeJednog/:id',
+  "/otpustanjeJednog/:id",
   generalniController.podesavanjeUrlRadiPogresaka,
-  authentifikacijskiController.onemogucavanjeZaUloge('admin'),
+  authController.onemogucavanjeZaUloge("admin"),
   korisnikController.otpustiKorisnika
 );
 
-router.get('/pretraga',  
-generalniController.podesavanjeUrlRadiPogresaka,
-    authentifikacijskiController.onemogucavanjeZaUloge('admin',"zaposlenik"),
-    korisnikController.parsiranjePodudarneKorisnike,
-    korisnikController.getKorisnike
-    );
+router.get(
+  "/pretraga",
+  generalniController.podesavanjeUrlRadiPogresaka,
+  authController.onemogucavanjeZaUloge("admin", "zaposlenik"),
+  korisnikController.parsiranjePodudarneKorisnike,
+  korisnikController.getKorisnike
+);
 
-
-router.get('/', authentifikacijskiController.onemogucavanjeZaUloge('admin',"zaposlenik"), korisnikController.getSviKorisnici);
+router.get(
+  "/",
+  authController.onemogucavanjeZaUloge("admin", "zaposlenik"),
+  korisnikController.getSviKorisnici
+);
 
 module.exports = router;

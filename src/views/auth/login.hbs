@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <title>Login</title>
+    {{>links}}
+
+</head>
+
+<body>
+    <div id="login-message"></div>
+
+
+    <div class="container">
+        <br>
+        <!--Naslov-->
+        <div class="row">
+            <div class="col-md-4">
+
+                <br>
+                <h1>Prijava</h1>
+            </div>
+
+        </div>
+        <br><br><br>
+        <div class="loginbox prijavna-forma">
+
+            <form method="POST" action="" id="loginForm" autocomplete="off">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <label class="form-label" name="userName">Korisničko ime:</label>
+                        <input class="form-control" type="text" placeholder="Unesi korisnicko ime" value=""
+                            name="userName" id="userName" required="required" /> <br>
+                    </div>
+                    <div class="col-md-6  col-md-offset-3">
+
+                        <label class="form-label" name="password">Sifra:</label>
+                        <input class="form-control" type="password" placeholder="Unesi sifru" value="" name="password"
+                            id="password" required="required" minlength="8" /> <br>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <button type="submit" class="form-log-btn btn btn-primary">Prijava</button><br />
+                        <a href="/register">Nemate račun? Registrirajte se!</a><br>
+                        <a href="/podatci/korisnici/zaboravljenaSifra">Zaboravili ste šifru?</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+  
+</body>
+
+</html>

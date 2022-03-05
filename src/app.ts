@@ -21,7 +21,8 @@ const http = require("http");
 const AppError = require('./utils/appError');
 const chatUzivo = require('./utils/socket');
 const globalErrorHandler = require('./controllers/errorController');
-const korisnikAPIRouter = require('./routes/korisnikAPIRoutes');
+const authRoutes = require('./routes/api/v2/authRoutes');
+const userRoutes = require('./routes/api/v2/userRoutes');
 const korisnikRouter = require('./routes/korisnikRoutes');
 const ponudaRouter = require('./routes/ponudaRoutes');
 const oglasRouter = require('./routes/oglasRoutes');
@@ -31,7 +32,7 @@ const rezervacijaRouter = require('./routes/rezervacijaRoutes');
 const statistikaRouter = require('./routes/statistikaRoutes');
 const rezervacijaController = require('./controllers/rezervacijaController');
 const generalniController = require('./controllers/generalniController');
-const authentifikacijskiController = require('./controllers/authentifikacijskiController');
+const authController = require('./controllers/authController');
 
 const app = express();
 
@@ -177,14 +178,13 @@ app.use(
 app.use(compression());
 
 //Midd. for auth check
-app.use(authentifikacijskiController.provjeraPrijavljenosti);
+app.use(authController.provjeraPrijavljenosti);
 /** END - GENERAL MIDDLEWARES */
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 
 /** ROUTES */    
-app.use('/podatci/korisnici', korisnikAPIRouter);
 app.use('/korisnici', korisnikRouter);
 app.use('/ponude', ponudaRouter);
 app.use('/oglasi', oglasRouter);
@@ -193,12 +193,14 @@ app.use('/rezervacije', rezervacijaRouter);
 app.use('/statistika', statistikaRouter);
 app.use('/', generalniRouter);
 
+app.use('/api/v2/users', userRoutes);
+app.use('/api/v2', authRoutes);
 
 // Download routes
 app.get(
   '/preuzimanjeSpecificneDatoteke/:fileName/:oglasId',
-  authentifikacijskiController.provjeraPrijavljenosti,
-  authentifikacijskiController.zastita,
+  authController.provjeraPrijavljenosti,
+  authController.zastita,
   catchAsync(async(req,res,next)=>{
     const oglas = await Oglas.findById(req.params.oglasId);
      if(oglas.zaposlenik.includes(req.user.id) || req.status=="admin"){
@@ -212,7 +214,7 @@ app.get(
 );
 app.get(
   '/preuzimanjeAgencijskeDatoteke/:fileName',
-  authentifikacijskiController.zastita,
+  authController.zastita,
   (req,res,next)=>{
     if(req.user.uloga!="zaposlenik" &&  req.user.uloga!="admin"){
      return next(new AppError("Zastićeni podatci, ne pokušavajte pristupiti"));
