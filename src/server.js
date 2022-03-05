@@ -21,7 +21,7 @@ process.on("uncaughtException", (err) => {
   process.exit(1); // Naglo gasenje aplikacije, jer je ista u necistom stanju
 });
 
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: "../config.env" });
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD

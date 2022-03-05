@@ -12,5 +12,6 @@ The administrator can "hire" and "fire" users, and change their activity (ie del
 
 Most views have the search option, whether by date, price, or name. Most of the actions were accompanied by appropriate notifications. The use of third party modules enabled the sanitation of data.
 
-
 Date: 21/11/2020.g.
+
+Refactoring: from 05/03/2022 - present
